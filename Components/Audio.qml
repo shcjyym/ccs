@@ -11,4 +11,18 @@ Item {
     visible: false;
     anchors.fill: parent;
     z:4;
+
+    Rectangle {
+        width: 200; height: 200
+        color: "red"
+        z:4
+        Drag.active: dragArea.drag.active
+
+
+        MouseArea {
+            id: dragArea
+            anchors.fill: parent
+            drag.target: parent
+        }
+    }
 }

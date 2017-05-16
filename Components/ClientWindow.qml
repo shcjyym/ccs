@@ -15,7 +15,6 @@ ApplicationWindow {
     y: (Screen.height - height) / 2;
     flags: Qt.FramelessWindowHint| Qt.WindowSystemMenuHint| Qt.WindowMinimizeButtonHint| Qt.Window;//窗体无边框处理
 
-
     Rectangle{
         id:menuline;
         width: parent.width;
@@ -170,5 +169,7 @@ ApplicationWindow {
 
         }
     }
+
+
 
 }
