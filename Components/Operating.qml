@@ -12,7 +12,6 @@ Item {
     anchors.fill: parent;
     z:4;
 
-
     Rectangle{
         id:operating_left;
         width: 250;
@@ -168,6 +167,7 @@ Item {
         font.bold: false;
         anchors.centerIn: signallist;
     }
+//***search function should be perfected***
     Search{
         id:signal_search;
         visible: true;
