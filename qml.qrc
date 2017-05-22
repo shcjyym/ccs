@@ -48,5 +48,7 @@
         <file>Components/Model/ComboBoxNew.qml</file>
         <file>Components/Model/TextNew.qml</file>
         <file>Components/Model/TextFieldNew.qml</file>
+        <file>Components/Model/Segmentation.qml</file>
+        <file>Components/Model/Rename.qml</file>
     </qresource>
 </RCC>

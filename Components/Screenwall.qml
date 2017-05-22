@@ -36,6 +36,7 @@ Item {
         opacity: 0.3;
     }
 
+
 //List View
     ListView{
         id:wall_listview;
@@ -67,6 +68,11 @@ Item {
         function deleteOne(){
             model.remove(currentIndex);
             var data=wall_listview.model.get(wall_listview.currentIndex);
+            mainwall.text="主墙:"+data.name;
+        }
+        function renameOne(){
+            var data=wall_listview.model.get(wall_listview.currentIndex);
+            data.name=rename_dialog.message;
             mainwall.text="主墙:"+data.name;
         }
     }
@@ -273,6 +279,10 @@ Item {
             anchors.left: openwall.right;
             anchors.leftMargin: 10;
             anchors.verticalCenter: screenwall_control.verticalCenter;
+            MouseArea{
+                anchors.fill: parent;
+                onClicked: {rename_dialog.show();}
+            }
         }
         TextNew{
             id:bottompicture;
@@ -300,7 +310,7 @@ Item {
             anchors.verticalCenter: screenwall_control.verticalCenter;
             MouseArea{
                 anchors.fill: parent;
-                onClicked: {segmentation.show();}
+                onClicked: {segmentation_dialog.show();}
             }
         }
         ComboBoxNew{
@@ -342,81 +352,17 @@ Item {
     }*/
 //试验末尾
 
-//分割模块开始
-    ApplicationWindow{
-        id:segmentation;
-        width: 250;
-        height: 200;
-        flags:Qt.Dialog;
-        title: "屏幕划分";
+    Segmentation{id:segmentation_dialog;}
 
-        property string row_item: row_field.text;
-        property string column_item: column_field.text;
-
-        Component.onCompleted: {
-            // at begin of window load, the key focus was in window
-            dialog.requestActivate();
+    Rename{
+        id:rename_dialog;
+        property string message;
+        onRename_clicked: {
+            message=msg;
+            wall_listview.renameOne();
         }
-        Rectangle{
-            id:seg_back;
-            anchors.fill: parent;
-            opacity: 0;
-        }
-        TextNew {
-            id: row_text;
-            text: "行:";
-            font.pixelSize: 20;
-            font.bold: false;
-            color: "black";
-            anchors.right: row_field.left;
-            anchors.rightMargin: 5;
-            anchors.verticalCenter: row_field.verticalCenter;
-        }
-        TextNew {
-            id: column_text;
-            text: "列:";
-            font.pixelSize: 20;
-            font.bold: false;
-            color: "black";
-            anchors.right: column_field.left;
-            anchors.rightMargin: 5;
-            anchors.verticalCenter: column_field.verticalCenter;
-        }
-        Buttoncolorchange{
-            id:confirm;
-            height: 30;
-            width: 100
-            text: "确认";
-            anchors.top: column_field.bottom;
-            anchors.topMargin : 20;
-            anchors.horizontalCenter : seg_back.horizontalCenter;
-            MouseArea{
-                anchors.fill: parent;
-                onClicked: {
-                console.debug("row:",row_field.text);
-                console.debug("column:",column_field.text);
-                //createRow();
-                segmentation.close();
-                }
-            }
-         }
+    }
 
-         TextFieldNew{
-             id:row_field
-             anchors.top: seg_back.top;
-             anchors.topMargin: 20;
-             anchors.horizontalCenter : seg_back.horizontalCenter;
-         }
-
-         TextFieldNew{
-             id:column_field
-             anchors.top: row_field.bottom;
-             anchors.topMargin : 20;
-             anchors.horizontalCenter : seg_back.horizontalCenter;
-         }
-
-}
-//分割模块结束
     Rectangle{
         id:twoxtwo1;
         height: 1;
@@ -658,7 +604,5 @@ Item {
              }
          }
      }
-
-
 
 }

@@ -254,7 +254,7 @@ Item {
             width: 50;
             anchors.horizontalCenter: operating_control.horizontalCenter;
             anchors.verticalCenter: operating_control.verticalCenter;
-            model:["main","1","2"];
+            model:["main"];
         }
         ComboBoxNew{
             id:stage;
