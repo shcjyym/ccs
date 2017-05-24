@@ -49,6 +49,7 @@ ApplicationWindow{
             onClicked: {
                 text_item=text_field.text;
                 rename.rename_clicked(text_field.text);
+                text_field.text="";
                 rename.close();
             }
         }

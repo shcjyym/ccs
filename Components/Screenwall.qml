@@ -12,6 +12,8 @@ Item {
     anchors.fill: parent;
     z:4;
 
+    property string message:dialog.myItem
+    property int index: wall_listview.currentIndex
 
     Rectangle{
         id:screenwall_left;
@@ -67,8 +69,6 @@ Item {
         }
         function deleteOne(){
             model.remove(currentIndex);
-            var data=wall_listview.model.get(wall_listview.currentIndex);
-            mainwall.text="主墙:"+data.name;
         }
         function renameOne(){
             var data=wall_listview.model.get(wall_listview.currentIndex);
@@ -83,7 +83,7 @@ Item {
         width: 300;
         height: 80;
         title: "请输入名称";
-        flags:Qt.Dialog
+        flags:Qt.Dialog;
         property string myItem:field.text;
         Component.onCompleted: {
             // at begin of window load, the key focus was in window
@@ -108,6 +108,7 @@ Item {
                 onClicked: {
                 console.debug("create tags:",field.text);
                 wall_listview.addOne();
+                operating.addOne();
                 field.text="";
                 dialog.close();
                 }
@@ -162,7 +163,9 @@ Item {
         MouseArea{
             anchors.fill: parent;
             onClicked: {
-                wall_listview.deleteOne();}
+                wall_listview.deleteOne();
+                operating.deleteOne();
+            }
         }
     }
 

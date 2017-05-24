@@ -7,7 +7,7 @@ import QtQuick.Dialogs 1.2
 import "./Model"
 
 /*
-参数、鸟瞰图information's text的id未加入，should add text behind
+参数、鸟瞰图其中的信息 text的id未加入，需要在之后进行人为加入，加入位置在所需位置之后,所需添加的是四个textnew添加位置在固化配置ID：viewer1_3的horizonCenter，与之对其，verticalCenter与相对应的对齐。
 输入节点和输出节点框图链接的text的ID为
 viewr3_19/viewer3_16/viewer3_13/viewer3_10/viewer3_5/viewr4_19/viewer4_16/viewer4_13/viewer4_10/viewer4_5
 加入property int number a\b\c
@@ -43,6 +43,25 @@ Item{
         }
     }
 
+    NumberAnimation {
+        id:opacity_close;
+        target: viewer;
+        property: "opacity";
+        from: 1
+        to: 0;
+        duration: 500;
+        running: false;
+    }
+    NumberAnimation {
+        id:opacity_open;
+        target: viewer;
+        property: "opacity";
+        from: 0;
+        to: 1;
+        duration: 1000;
+        running: false;
+    }
+
     TextNew {
         id: closeview;
         text: qsTr("-");
@@ -54,7 +73,7 @@ Item{
             anchors.fill: parent;
             onClicked: {
                 closeview.visible=false;openview.visible=true;openviewtext.visible=true;closeviewtext.visible=false;
-                viewer.visible=false;
+                opacity_close.running=true;
             }
         }
     }
@@ -70,7 +89,7 @@ Item{
             anchors.fill: parent;
             onClicked: {
                 closeview.visible=true;openview.visible=false;openviewtext.visible=false;closeviewtext.visible=true;
-                viewer.visible=true;
+                opacity_open.running=true;
             }
         }
     }
@@ -99,6 +118,7 @@ Item{
     Item{                                //鸟瞰框图
         id:viewer;
         visible: true;
+        opacity: 1;
         anchors.top: openviewtext.bottom;
         anchors.topMargin: 10;
         anchors.left: openviewtext.left;

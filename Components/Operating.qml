@@ -12,6 +12,10 @@ Item {
     anchors.fill: parent;
     z:4;
 
+    function addOne(){operating_listview.addOne();}
+    function deleteOne(){operating_listview.deleteOne();}
+
+
     Rectangle{
         id:operating_left;
         width: 250;
@@ -241,7 +245,6 @@ Item {
             anchors.left: setting.right;
             anchors.leftMargin: 20;
             anchors.verticalCenter: operating_control.verticalCenter;
-            currentIndex: 1;
             model:["打开","关闭"];
             onCurrentIndexChanged: {
                 if(currentIndex===0){centralView.visible=true;}
@@ -284,6 +287,15 @@ Item {
                 color: "grey";
             }
 
+        property int index: screenwall.index
+
+        function addOne(){
+            model.append({"name":screenwall.message});
+        }
+        function deleteOne(){
+            model.remove(index);
+        }
+
     }
 //inDelegate
     Component{
@@ -298,16 +310,13 @@ Item {
                     wrapper.ListView.view.currentIndex=index;//获取当前选中的index
                     mouse.accepted=true;
                     if(index===0){
-                        imageViewer.source= ""
-                        centralView.visible=false;
+                        imageViewer.source= "";
                     }
                     if(index===1){
-                        centralView.visible=true;
                         imageViewer.source= "./pictures/background1.jpg";
                     }
                     if(index===2){
                         imageViewer.source= "";
-                        centralView.visible=false;
                     }
                 }
             }
@@ -330,13 +339,7 @@ Item {
             id:operating_model;
             ListModel{
                 ListElement{
-                    name:"picture1";
-                }
-                ListElement{
-                    name:"picture2";
-                }
-                ListElement{
-                    name:"picture3";
+                    name:"试例墙";
                 }
             }
     }
@@ -348,7 +351,6 @@ Item {
         y:operating_right.y;
         height: 500;
         width: 500;
-        visible: false;//一开始设置为false，之后在显示图片时加入true属性，避免一进入界面鼠标图标更换的情况
         z:4;
         Image {
             id: imageViewer;
