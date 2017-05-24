@@ -26,6 +26,10 @@ Item {
         opacity: 0.3;
     }
 
+    property var wallrighth: screenwall_right.height;
+    property var wallrightw: screenwall_right.width;
+    property var wallrightx: screenwall_right.x;
+    property var wallrighty: screenwall_right.y;
     Rectangle{
         id:screenwall_right;
         width: screenwall.width-screenwall_left.width-60;
@@ -306,7 +310,7 @@ Item {
         }
         TextNew{
             id:size;
-            text: "2X2";
+            text: "0X0";
             font.bold: false;
             anchors.right: changeresolution.left;
             anchors.rightMargin: 20;
@@ -327,35 +331,42 @@ Item {
         }
 
     }
-//试验
-    /*
-    Component{
-        id:row_delegate;
-        Rectangle{
-        height: 1;
-        width: screenwall_right.width;
-        z:5
+//产生行和列   ***此处存在问题，放大窗口后动态产生的组件的长宽位置不发生变化***
+
+
+    function create(){
+        var component = Qt.createComponent("Screenwallcomponent.qml");
+        var object = component.createObject(screenwall);
+        for(var i=1;i<segmentation_dialog.row_item;i++){
+            var component1=Qt.createQmlObject('import QtQuick 2.0; Rectangle {color: "white"; height: 1;opacity:0.4}',
+                                         object);
+            component1.z=5;
+            component1.width=screenwall_right.width;
+            component1.x=0;
+            component1.y=i*screenwall_right.height/segmentation_dialog.row_item;
+        }
+
+        for(var j=1;j<segmentation_dialog.column_item;j++){
+            var component2=Qt.createQmlObject('import QtQuick 2.0; Rectangle {color: "white"; width: 1;opacity:0.4}',
+                                         object);
+            component2.z=5;
+            component2.height=screenwall_right.height;
+            component2.y=0;
+            component2.x=j*screenwall_right.width/segmentation_dialog.column_item;
         }
     }
 
-    property Component component: null
 
-    property int i: 0;
 
-    function createRow(){
-        var rowDelegate;
 
-        screenwall.component=Qt.createComponent(row_delegate)
-        for(i=1;i<row_field;i++){
-            rowDelegate=screenwall.component.createObject(screenwall,{"color":white,"x":400,"y":500})
+//产生行和列  末尾
+
+    Segmentation{
+        id:segmentation_dialog;
+        onText_change: {
+            size.text=segmentation_dialog.row_item+"X"+segmentation_dialog.column_item;
         }
     }
-
-    function createColumn(){
-    }*/
-//试验末尾
-
-    Segmentation{id:segmentation_dialog;}
 
     Rename{
         id:rename_dialog;
@@ -366,7 +377,7 @@ Item {
         }
     }
 
-    Rectangle{
+    /*Rectangle{
         id:twoxtwo1;
         height: 1;
         width: screenwall_right.width;
@@ -385,7 +396,7 @@ Item {
         anchors.top: screenwall_right.top;
         anchors.left: screenwall_right.horizontalCenter;
         z:5
-    }
+    }*/
 
  //存储照片的中心框，包含拉伸，拖动，缩放
      Item{

@@ -17,6 +17,7 @@ import QtQuick.Dialogs 1.2
 
         property string row_item: row_field.text;
         property string column_item: column_field.text;
+        signal text_change();
 
         Component.onCompleted: {
             // at begin of window load, the key focus was in window
@@ -60,7 +61,8 @@ import QtQuick.Dialogs 1.2
                 onClicked: {
                 console.debug("row:",row_field.text);
                 console.debug("column:",column_field.text);
-                //createRow();
+                create();
+                text_change();
                 segmentation.close();
                 }
             }
