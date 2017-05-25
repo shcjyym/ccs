@@ -303,22 +303,10 @@ Item {
             id:mode;
             height: screenwall_control.height;
             width: 50;
-            anchors.right: size.left;
-            anchors.rightMargin: 20;
-            anchors.verticalCenter: screenwall_control.verticalCenter;
-            model:["LCD","LED"];
-        }
-        TextNew{
-            id:size;
-            text: "0X0";
-            font.bold: false;
             anchors.right: changeresolution.left;
             anchors.rightMargin: 20;
             anchors.verticalCenter: screenwall_control.verticalCenter;
-            MouseArea{
-                anchors.fill: parent;
-                onClicked: {segmentation_dialog.show();}
-            }
+            model:["LCD","LED"];
         }
         ComboBoxNew{
             id:changeresolution;
@@ -331,42 +319,6 @@ Item {
         }
 
     }
-//产生行和列   ***此处存在问题，放大窗口后动态产生的组件的长宽位置不发生变化***
-
-
-    function create(){
-        var component = Qt.createComponent("Screenwallcomponent.qml");
-        var object = component.createObject(screenwall);
-        for(var i=1;i<segmentation_dialog.row_item;i++){
-            var component1=Qt.createQmlObject('import QtQuick 2.0; Rectangle {color: "white"; height: 1;opacity:0.4}',
-                                         object);
-            component1.z=5;
-            component1.width=screenwall_right.width;
-            component1.x=0;
-            component1.y=i*screenwall_right.height/segmentation_dialog.row_item;
-        }
-
-        for(var j=1;j<segmentation_dialog.column_item;j++){
-            var component2=Qt.createQmlObject('import QtQuick 2.0; Rectangle {color: "white"; width: 1;opacity:0.4}',
-                                         object);
-            component2.z=5;
-            component2.height=screenwall_right.height;
-            component2.y=0;
-            component2.x=j*screenwall_right.width/segmentation_dialog.column_item;
-        }
-    }
-
-
-
-
-//产生行和列  末尾
-
-    Segmentation{
-        id:segmentation_dialog;
-        onText_change: {
-            size.text=segmentation_dialog.row_item+"X"+segmentation_dialog.column_item;
-        }
-    }
 
     Rename{
         id:rename_dialog;
@@ -376,27 +328,6 @@ Item {
             wall_listview.renameOne();
         }
     }
-
-    /*Rectangle{
-        id:twoxtwo1;
-        height: 1;
-        width: screenwall_right.width;
-        color:"white";
-        opacity: 0.4;
-        anchors.left: screenwall_right.left;
-        anchors.top: screenwall_right.verticalCenter;
-        z:5
-    }
-    Rectangle{
-        id:twoxtwo2;
-        height: screenwall_right.height;
-        width: 1;
-        color:"white";
-        opacity: 0.4;
-        anchors.top: screenwall_right.top;
-        anchors.left: screenwall_right.horizontalCenter;
-        z:5
-    }*/
 
  //存储照片的中心框，包含拉伸，拖动，缩放
      Item{

@@ -19,10 +19,6 @@ import QtQuick.Dialogs 1.2
         property string column_item: column_field.text;
         signal text_change();
 
-        Component.onCompleted: {
-            // at begin of window load, the key focus was in window
-            dialog.requestActivate();
-        }
         Rectangle{
             id:seg_back;
             anchors.fill: parent;

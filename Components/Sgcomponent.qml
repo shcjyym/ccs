@@ -5,16 +5,16 @@ Item {
     id:viewer;
     width: aaa.wallrightw;
     height: aaa.wallrighth;
-    x:aaa.wallrightx;
-    y:aaa.wallrighty;
+    x:bbb.oprightx;
+    y:bbb.oprighty;
     z:5
     Screenwall{id:aaa;}
-
+    Operating{id:bbb;}
     TextNew {
         id: close;
         text: "重置网格视图";
         font.bold: false;
-        x:-aaa.wallrightw/2+100;
+        x:-aaa.wallrightw/2;
         y:-25;
         MouseArea{
             anchors.fill: parent;

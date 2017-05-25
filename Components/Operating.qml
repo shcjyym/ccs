@@ -141,10 +141,13 @@ Item {
     }
 
 //右侧框图
+    Screenwall{id:refer;}
+    property var oprightx: operating_right.x;
+    property var oprighty: operating_right.y;
     Rectangle{
         id:operating_right;
-        width: operating.width-operating_left.width-40;
-        height: operating_left.height-80;
+        width: refer.wallrightw;
+        height: refer.wallrighth;
         color: "lightgrey";
         anchors.top: operating_left.top;
         anchors.topMargin: 70;
@@ -181,26 +184,7 @@ Item {
         anchors.leftMargin: 5;
     }
 //分割线
-    Rectangle{
-        id:twoxtwov;
-        height: 1;
-        width: operating_right.width;
-        color:"white";
-        opacity: 0.4;
-        anchors.left: operating_right.left;
-        anchors.top: operating_right.verticalCenter;
-        z:5
-    }
-    Rectangle{
-        id:twoxtwoh;
-        height: operating_right.height;
-        width: 1;
-        color:"white";
-        opacity: 0.4;
-        anchors.top: operating_right.top;
-        anchors.left: operating_right.horizontalCenter;
-        z:5
-    }
+
 //控制条形窗
     Rectangle{
         id:operating_control;
@@ -211,7 +195,7 @@ Item {
         anchors.left: operating_right.left;
 
         ComboBoxNew{
-            id:size;
+            id:windowsize;
             height: operating_control.height;
             width: 50;
             anchors.left: operating_control.left;
@@ -234,7 +218,7 @@ Item {
             id:setting;
             text: "设置";
             font.bold: false;
-            anchors.left: size.right;
+            anchors.left: windowsize.right;
             anchors.leftMargin: 40;
             anchors.verticalCenter: operating_control.verticalCenter;
         }
@@ -245,10 +229,22 @@ Item {
             anchors.left: setting.right;
             anchors.leftMargin: 20;
             anchors.verticalCenter: operating_control.verticalCenter;
-            model:["打开","关闭"];
+            model:["关闭","打开"];
             onCurrentIndexChanged: {
-                if(currentIndex===0){centralView.visible=true;}
-                if(currentIndex===1){centralView.visible=false;}
+                if(currentIndex===0){centralView.visible=false;}
+                if(currentIndex===1){centralView.visible=true;}
+            }
+        }
+        TextNew{
+            id:size;
+            text: "0X0";
+            font.bold: false;
+            anchors.left: close.right;
+            anchors.leftMargin : 40;
+            anchors.verticalCenter: operating_control.verticalCenter;
+            MouseArea{
+                anchors.fill: parent;
+                onClicked: {segmentation_dialog.show();}
             }
         }
         ComboBoxNew{
@@ -269,6 +265,45 @@ Item {
             model:["场景一","场景二","场景三"];
         }
     }
+
+//产生行和列   ***此处存在问题，放大窗口后动态产生的组件的长宽位置不发生变化***
+
+
+    function create(){
+        var component = Qt.createComponent("Sgcomponent.qml");
+        var object = component.createObject(operating);
+        for(var i=1;i<segmentation_dialog.row_item;i++){
+            var component1=Qt.createQmlObject('import QtQuick 2.0; Rectangle {color: "white"; height: 1;opacity:0.4}',
+                                         object);
+            component1.z=5;
+            component1.width=operating_right.width;
+            component1.x=0;
+            component1.y=i*operating_right.height/segmentation_dialog.row_item;
+        }
+
+        for(var j=1;j<segmentation_dialog.column_item;j++){
+            var component2=Qt.createQmlObject('import QtQuick 2.0; Rectangle {color: "white"; width: 1;opacity:0.4}',
+                                         object);
+            component2.z=5;
+            component2.height=operating_right.height;
+            component2.y=0;
+            component2.x=j*operating_right.width/segmentation_dialog.column_item;
+        }
+    }
+
+
+
+
+//产生行和列  末尾
+
+
+    Segmentation{
+        id:segmentation_dialog;
+        onText_change: {
+            size.text=segmentation_dialog.row_item+"X"+segmentation_dialog.column_item;
+        }
+    }
+
 //Listview
     ListView{
         id:operating_listview;
@@ -310,13 +345,19 @@ Item {
                     wrapper.ListView.view.currentIndex=index;//获取当前选中的index
                     mouse.accepted=true;
                     if(index===0){
-                        imageViewer.source= "";
+                        close.currentIndex=0;
+                        imageViewer.source= ""
+                        centralView.visible=false;
                     }
                     if(index===1){
+                        close.currentIndex=1;
+                        imageViewer.visible=true;
                         imageViewer.source= "./pictures/background1.jpg";
                     }
                     if(index===2){
+                        close.currentIndex=0;
                         imageViewer.source= "";
+                        centralView.visible=false;
                     }
                 }
             }
@@ -352,6 +393,7 @@ Item {
         height: 500;
         width: 500;
         z:4;
+        visible: false;
         Image {
             id: imageViewer;
             anchors.fill:parent;
