@@ -26,153 +26,111 @@ Item {
         anchors.left: operating.left;
         opacity: 0.3;
     }
-//左侧动画效果预置
-    NumberAnimation {
-        id:change_opacity_in;
-        target: operating_left;
-        property: "opacity";
-        from: 0.3
-        to: 0;
-        duration: 1000;
-        running: false;
-    }
-    NumberAnimation {
-        id:change_opacity_in1;
-        targets: [signal_search,operating_listview,signallist,signallist_text];
-        property: "opacity";
-        from: 1;
-        to: 0;
-        duration: 1500;
-        running: false;
-    }
-    NumberAnimation {
-        id:change_opacity_out;
-        target: operating_left;
-        property: "opacity";
-        from: 0
-        to: 0.3;
-        duration: 1000;
-        running: false;
-    }
-    NumberAnimation {
-        id:change_opacity_out1;
-        targets: [signal_search,operating_listview,signallist,signallist_text];
-        property: "opacity";
-        from: 0
-        to: 1;
-        duration: 1500;
-        running: false;
-    }
-    NumberAnimation {
-        id:change_width_in;
-        targets: [operating_left,operating_listview];
-        property: "width";
-        from: 250
-        to: 0;
-        duration: 1000;
-        running: false;
-    }
-    NumberAnimation {
-        id:change_width_in1;
-        targets: signal_search;
-        property: "width";
-        from: 200;
-        to: 0;
-        duration: 1000;
-        running: false;
-    }
-    NumberAnimation {
-        id:change_width_out;
-        targets: [operating_left,operating_listview];
-        property: "width";
-        from: 0
-        to: 250;
-        duration: 1000;
-        running: false;
-    }
-    NumberAnimation {
-        id:change_width_out1;
-        target: signal_search;
-        property: "width";
-        from: 0
-        to: 200;
-        duration: 1200;
-        running: false;
-    }
-//按钮隐藏左侧视图，拉伸右侧视图
-    Rectangle{
-        id:operating_left_close;
-        width:15;
-        height:40;
-        anchors.verticalCenter: operating_left.verticalCenter;
-        anchors.left: operating_left.right;
-        color: "lightgrey";
-        opacity: 0.5;
-    }
-    TextNew {
-        id: operating_left_1
-        text: "<";
-        visible: true;
-        anchors.centerIn: operating_left_close;
-        MouseArea{
-            anchors.fill: parent;
-            onClicked: {
-                operating_left_1.visible=false;operating_left_2.visible=true;
-                signallist.visible=false;signallist_text.visible=false;signal_search.visible=false;operating_listview.visible=false;
-                change_opacity_in.running=true;change_opacity_in1.running=true;
-                change_width_in.running=true;change_width_in1.running=true;
-            }
-        }
-    }
-    TextNew {
-        id: operating_left_2
-        text: ">";
-        visible: false;
-        anchors.centerIn: operating_left_close;
-        MouseArea{
-            anchors.fill: parent;
-            onClicked: {
-                operating_left_1.visible=true;operating_left_2.visible=false;
-                signallist.visible=true;signallist_text.visible=true;signal_search.visible=true;operating_listview.visible=true;
-                change_opacity_out.running=true;change_opacity_out1.running=true;
-                change_width_out.running=true;change_width_out1.running=true;
-            }
-        }
-    }
+
 
 //右侧框图
     Screenwall{id:refer;}
-    property var oprightx: operating_right.x;
-    property var oprighty: operating_right.y;
-    Rectangle{
+    property var oprightx: operating_right_view.x;
+    property var oprighty: operating_right_view.y;
+    ScrollView{
         id:operating_right;
-        width: refer.wallrightw;
-        height: refer.wallrighth;
-        color: "lightgrey";
+        width: operating.width-300;
+        height: operating.height-180;
         anchors.top: operating_left.top;
         anchors.topMargin: 70;
         anchors.left: operating_left.right;
         anchors.leftMargin: 20;
-        opacity: 0.3;
+        visible: true;
+        Rectangle{
+            id:operating_right_view
+            height: 1080;
+            width: 1920;
+            color: "lightgrey";
+            DropArea{
+                anchors.fill: parent;
+                onDropped: {
+                    operating.createImageviewer();
+                }
+            }
+        }
     }
 
+    ScrollView{
+        id:operating_right1;
+        width: refer.wallrightw;
+        height: refer.wallrighth;
+        anchors.top: operating_left.top;
+        anchors.topMargin: 70;
+        anchors.left: operating_left.right;
+        anchors.leftMargin: 20;
+        visible: false;
+        Rectangle{
+            id:operating_right_view1
+            height: 1080;
+            width: 1920;
+            color: "lightgrey";
+            DropArea{
+                anchors.fill: parent;
+                onDropped: {
+                    operating.createImageviewer1();
+                }
+            }
+        }
+    }
+//
     Rectangle{
         id:signallist;
         height: 30;
         visible: true;
-        width: operating_left.width;
+        width: operating_left.width/2;
         anchors.top:operating_left.top;
         anchors.left: operating_left.left;
-        color: "steelblue";
+        color: "darkblue";
         opacity: 0.5;
     }
     TextNew {
         id: signallist_text
-        text: "信号列表";
+        text: "屏幕列表";
         visible: true;
         font.pixelSize: 20;
         font.bold: false;
         anchors.centerIn: signallist;
+        MouseArea{
+            anchors.fill: parent;
+            onClicked: {
+                signalsource_listview.visible=false;
+                operating_listview.visible=true;
+                signallist.color="darkblue";
+                sourcelist.color="steelblue";
+            }
+        }
+    }
+    Rectangle{
+        id:sourcelist;
+        height: 30;
+        visible: true;
+        width: operating_left.width/2;
+        anchors.top:operating_left.top;
+        anchors.left: signallist.right;
+        color: "steelblue";
+        opacity: 0.5;
+    }
+    TextNew {
+        id: sourcelist_text
+        text: "信号列表";
+        visible: true;
+        font.pixelSize: 20;
+        font.bold: false;
+        anchors.centerIn: sourcelist;
+        MouseArea{
+            anchors.fill: parent;
+            onClicked: {
+                signalsource_listview.visible=true;
+                operating_listview.visible=false;
+                sourcelist.color="darkblue";
+                signallist.color="steelblue";
+            }
+        }
     }
 //***search function should be perfected***
     Search{
@@ -201,7 +159,7 @@ Item {
             anchors.left: operating_control.left;
             anchors.verticalCenter: operating_control.verticalCenter;
             model:["正常","10%","20%","30%","40%","50%","60%","70%","80%","90%"];
-            onCurrentIndexChanged: {
+           /* onCurrentIndexChanged: {
                 if(currentIndex===0){centralView.height=500;centralView.width=500;}
                 if(currentIndex===1){centralView.height=50;centralView.width=50;}
                 if(currentIndex===2){centralView.height=100;centralView.width=100;}
@@ -212,7 +170,7 @@ Item {
                 if(currentIndex===7){centralView.height=350;centralView.width=350;}
                 if(currentIndex===8){centralView.height=400;centralView.width=400;}
                 if(currentIndex===9){centralView.height=450;centralView.width=450;}
-            }
+            }*/
         }
         TextNew{
             id:setting;
@@ -222,17 +180,16 @@ Item {
             anchors.leftMargin: 40;
             anchors.verticalCenter: operating_control.verticalCenter;
         }
-        ComboBoxNew{
+        TextNew{
             id:close;
-            height: operating_control.height;
-            width: 30;
+            text: "修改分辨率";
+            font.bold: false;
             anchors.left: setting.right;
             anchors.leftMargin: 20;
             anchors.verticalCenter: operating_control.verticalCenter;
-            model:["关闭","打开"];
-            onCurrentIndexChanged: {
-                if(currentIndex===0){centralView.visible=false;}
-                if(currentIndex===1){centralView.visible=true;}
+            MouseArea{
+                anchors.fill: parent;
+                onClicked: {changeResolution.show();}
             }
         }
         TextNew{
@@ -247,13 +204,11 @@ Item {
                 onClicked: {segmentation_dialog.show();}
             }
         }
-        ComboBoxNew{
+        TextNew{
             id:window;
-            height: operating_control.height;
-            width: 50;
+            font.bold: false;
             anchors.horizontalCenter: operating_control.horizontalCenter;
             anchors.verticalCenter: operating_control.verticalCenter;
-            model:["main"];
         }
         ComboBoxNew{
             id:stage;
@@ -266,35 +221,7 @@ Item {
         }
     }
 
-//产生行和列   ***此处存在问题，放大窗口后动态产生的组件的长宽位置不发生变化***
 
-
-    function create(){
-        var component = Qt.createComponent("Sgcomponent.qml");
-        var object = component.createObject(operating);
-        for(var i=1;i<segmentation_dialog.row_item;i++){
-            var component1=Qt.createQmlObject('import QtQuick 2.0; Rectangle {color: "white"; height: 1;opacity:0.4}',
-                                         object);
-            component1.z=5;
-            component1.width=operating_right.width;
-            component1.x=0;
-            component1.y=i*operating_right.height/segmentation_dialog.row_item;
-        }
-
-        for(var j=1;j<segmentation_dialog.column_item;j++){
-            var component2=Qt.createQmlObject('import QtQuick 2.0; Rectangle {color: "white"; width: 1;opacity:0.4}',
-                                         object);
-            component2.z=5;
-            component2.height=operating_right.height;
-            component2.y=0;
-            component2.x=j*operating_right.width/segmentation_dialog.column_item;
-        }
-    }
-
-
-
-
-//产生行和列  末尾
 
 
     Segmentation{
@@ -304,7 +231,154 @@ Item {
         }
     }
 
-//Listview
+    Changeresolution{
+        id:changeResolution;
+    }
+
+//信号源Listview
+
+    ListView{
+        id:signalsource_listview;
+        width: 250;
+        visible: false;
+        anchors.top: signal_search.bottom;
+        anchors.topMargin: 10;
+        anchors.left: operating_left.left;
+        anchors.bottom: parent.bottom;
+        anchors.bottomMargin: 25;
+        delegate: signalsource_delegate;
+        model: signalsource_model.createObject(signalsource_listview);
+        focus: true;
+        highlight: Rectangle{
+                opacity:0.5;
+                color: "grey";
+            }
+
+        property string pictureSource;
+        property string resolutionw;
+        property string resolutionh;
+        onCurrentIndexChanged: {
+            if(operating_listview.currentIndex>=0){
+                var data=signalsource_listview.model.get(signalsource_listview.currentIndex);
+                pictureSource=data.imagesource;
+                resolutionw=data.resolution1;
+                resolutionw=data.resolution3;
+            }else{
+                pictureSource="";
+            }
+        }
+    }
+//inDelegate
+    Component{
+        id:signalsource_delegate;
+        Item{
+            id: wrapper;
+            width: parent.width;
+            height: 80;
+            Drag.active: dragArea.drag.active;
+            Drag.dragType: Drag.Automatic;
+            property real change_x;
+            property real change_y;
+            MouseArea{
+                id:dragArea;
+                anchors.fill: parent;
+                onPressed: {
+                    change_x=wrapper.x;
+                    change_y=wrapper.y;
+                }
+                onReleased: {
+                    parent.Drag.drop();
+                    wrapper.x=change_x;
+                    wrapper.y=change_y;
+                }
+                onClicked: {
+                    wrapper.ListView.view.currentIndex=index;//获取当前选中的index
+                    mouse.accepted=true;
+                }
+                drag.target: parent;
+            }
+
+            RowLayout{
+                anchors.verticalCenter: parent.verticalCenter;
+                anchors.left: parent.left;
+                anchors.leftMargin: 15;
+                TextNew{
+                    id: wrapper_name;
+                    text: name;
+                    font.bold: false;
+                    anchors.left: parent.left;
+                    Layout.preferredWidth: 25;
+                }
+                TextNew{
+                    id: wrapper_order;
+                    text: order;
+                    font.bold: false;
+                    Layout.preferredWidth: 15;
+                }
+                Rectangle {
+                    id: wrapper_picture;
+                    height: 60;
+                    width: 60;
+                    anchors.verticalCenter: parent.verticalCenter;
+                    Image {
+                        id: wrapper_source
+                        source: imagesource;
+                        anchors.fill: parent;
+                    }
+                }
+                TextNew{
+                    id:wrapper_ip
+                    text:ip;
+                    font.bold: false;
+                    Layout.preferredWidth: 130
+                    anchors.verticalCenter: parent.verticalCenter;
+                    anchors.verticalCenterOffset: 20;
+                }
+                TextNew{
+                    id:wrapper_resolution
+                    text:resolution1+resolution2+resolution3;
+                    font.bold: false;
+                    anchors.left: wrapper_ip.left;
+                    anchors.verticalCenter: parent.verticalCenter;
+                    anchors.verticalCenterOffset: -20;
+                }
+            }
+        }
+    }
+//inModel
+    Component{
+            id:signalsource_model;
+            ListModel{
+                ListElement{
+                    name:"ID1:";
+                    order:"(1)"
+                    imagesource:"./pictures/background1.jpg"
+                    ip:"11.111.11.111"
+                    resolution1:"1920"
+                    resolution2:"X"
+                    resolution3:"1080"
+                }
+                ListElement{
+                    name:"ID1:";
+                    order:"(2)"
+                    imagesource:"./pictures/background3.jpg";
+                    ip:"22.222.22.222"
+                    resolution1:"1024"
+                    resolution2:"X"
+                    resolution3:"768"
+                }
+                ListElement{
+                    name:"ID2:";
+                    order:"(1)"
+                    imagesource:"./pictures/background4.jpg";
+                    ip:"15.155.15.155"
+                    resolution1:"640"
+                    resolution2:"X"
+                    resolution3:"360"
+                }
+            }
+    }
+//屏幕墙Listview
     ListView{
         id:operating_listview;
         width: 250;
@@ -322,7 +396,14 @@ Item {
                 color: "grey";
             }
 
-        property int index: screenwall.index
+        onCurrentIndexChanged: {
+            if(operating_listview.currentIndex>=0){
+                var data=operating_listview.model.get(operating_listview.currentIndex);
+                window.text=data.name;
+            }else{
+                window.text=""
+            }
+        }
 
         function addOne(){
             model.append({"name":screenwall.message});
@@ -345,19 +426,12 @@ Item {
                     wrapper.ListView.view.currentIndex=index;//获取当前选中的index
                     mouse.accepted=true;
                     if(index===0){
-                        close.currentIndex=0;
-                        imageViewer.source= ""
-                        centralView.visible=false;
+                        operating_right.visible=true;
+                        operating_right1.visible=false;
                     }
                     if(index===1){
-                        close.currentIndex=1;
-                        imageViewer.visible=true;
-                        imageViewer.source= "./pictures/background1.jpg";
-                    }
-                    if(index===2){
-                        close.currentIndex=0;
-                        imageViewer.source= "";
-                        centralView.visible=false;
+                        operating_right.visible=false;
+                        operating_right1.visible=true;
                     }
                 }
             }
@@ -380,230 +454,60 @@ Item {
             id:operating_model;
             ListModel{
                 ListElement{
-                    name:"试例墙";
+                    name:"屏幕一";
+                }
+                ListElement{
+                    name:"屏幕二";
                 }
             }
     }
 
-//存储照片的中心框，包含拉伸，拖动，缩放
-    Item{
-        id:centralView;
-        x:operating_right.x;
-        y:operating_right.y;
-        height: 500;
-        width: 500;
-        z:4;
-        visible: false;
-        Image {
-            id: imageViewer;
-            anchors.fill:parent;
-            asynchronous: true;
-            z:4;
-        }
-        Drag.active: dragArea.drag.active
-        MouseArea {
-            id: dragArea
-            cursorShape: pressed?Qt.ClosedHandCursor:Qt.OpenHandCursor;
-            height: centralView.height*6/7;
-            width: centralView.width*6/7;
-            anchors.centerIn : parent;
-            drag.target: parent
-        }
-//**图片拉伸**
-        //右下角拉伸
-        MouseArea{
-            id:change_rb;
-            height: centralView.height/14;
-            width: centralView.width/14;
-            anchors.right: centralView.right;
-            anchors.bottom: centralView.bottom;
-            property point clickPos: "0,0";
-            cursorShape: Qt.SizeFDiagCursor;
-            onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
-            onPositionChanged : {
-                var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-                if(centralView.width+delta.x>50){
-                centralView.width+=delta.x;
-                }else{
-                    centralView.width=50;
-                }
-                if(centralView.height+delta.y>50){
-                centralView.height+=delta.y;
-                }else{
-                    centralView.height=50;
-                }
+    //产生行和列   ***此处存在问题，放大窗口后动态产生的组件的长宽位置不发生变化***
+
+
+        function create(){
+            var component = Qt.createComponent("Sgcomponent.qml");
+            var object = component.createObject(operating_right_view);
+            for(var i=1;i<segmentation_dialog.row_item;i++){
+                var component1=Qt.createQmlObject('import QtQuick 2.0; Rectangle {color: "white"; height: 1;opacity:0.4}',
+                                             object);
+                component1.z=5;
+                component1.width=operating_right_view.width;
+                component1.x=0;
+                component1.y=i*operating_right_view.height/segmentation_dialog.row_item;
+            }
+
+            for(var j=1;j<segmentation_dialog.column_item;j++){
+                var component2=Qt.createQmlObject('import QtQuick 2.0; Rectangle {color: "white"; width: 1;opacity:0.4}',
+                                             object);
+                component2.z=5;
+                component2.height=operating_right_view.height;
+                component2.y=0;
+                component2.x=j*operating_right_view.width/segmentation_dialog.column_item;
             }
         }
-        //右上角拉伸
-        MouseArea{
-            id:change_rt;
-            height: centralView.height/14;
-            width: centralView.width/14;
-            anchors.right: centralView.right;
-            anchors.top: centralView.top;
-            property point clickPos: "0,0";
-            cursorShape: Qt.SizeBDiagCursor;
-            onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
-            onPositionChanged : {
-                var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-                var deltay= centralView.height-50;
-                if(centralView.width+delta.x>50){
-                    centralView.width+=delta.x;
-                }else{
-                    centralView.width=50;
-                }
-                if(centralView.height-delta.y>50){
-                    centralView.height-=delta.y;
-                    centralView.y+=delta.y;
-                }else{
-                    centralView.height=50;
-                    centralView.y+=deltay;
-                }
-            }
-        }
-        //左下角拉伸
-        MouseArea{
-            id:change_lb;
-            height: centralView.height/14;
-            width: centralView.width/14;
-            anchors.left: centralView.left;
-            anchors.bottom: centralView.bottom;
-            property point clickPos: "0,0";
-            cursorShape: Qt.SizeBDiagCursor;
-            onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
-            onPositionChanged : {
-                var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-                var deltax= centralView.width-50;
-                if(centralView.width-delta.x>50){
-                    centralView.width-=delta.x;
-                    centralView.x+=delta.x;
-                }else{
-                    centralView.width=50;
-                    centralView.x+=deltax;
-                }
-                if(centralView.height+delta.y>50){
-                    centralView.height+=delta.y;
-                }else{
-                    centralView.height=50;
-                }
-            }
-        }
-        //左上角拉伸
-        MouseArea{
-            id:change_lt;
-            height: centralView.height/14;
-            width: centralView.width/14;
-            anchors.left: centralView.left;
-            anchors.top: centralView.top;
-            property point clickPos: "0,0";
-            cursorShape: Qt.SizeFDiagCursor;
-            onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
-            onPositionChanged : {
-                var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-                var deltax= centralView.width-50;
-                var deltay= centralView.height-50;
-                if(centralView.width-delta.x>50){
-                    centralView.width-=delta.x;
-                    centralView.x+=delta.x;
-                }else{
-                    centralView.width=50;
-                    centralView.x+=deltax;
-                }
-                if(centralView.height-delta.y>50){
-                centralView.height-=delta.y;
-                centralView.y+=delta.y;
-                }else{
-                    centralView.height=50;
-                    centralView.y+=deltay;
-                }
-            }
-        }
-        //左边拉伸
-        MouseArea{
-            id:change_l;
-            height: centralView.height*6/7;
-            width: centralView.width/14;
-            anchors.left: centralView.left;
-            anchors.top: centralView.top;
-            anchors.topMargin: centralView.height/14
-            property point clickPos: "0,0";
-            cursorShape: Qt.SizeHorCursor;
-            onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
-            onPositionChanged : {
-                var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-                var deltax= centralView.width-50;
-                if(centralView.width-delta.x>50){
-                    centralView.width-=delta.x;
-                    centralView.x+=delta.x;
-                }else{
-                    centralView.width=50;
-                    centralView.x+=deltax;
-                }
-            }
-        }
-        //右边拉伸
-        MouseArea{
-            id:change_r;
-            height: centralView.height*6/7;
-            width: centralView.width/14;
-            anchors.right: centralView.right;
-            anchors.top: centralView.top;
-            anchors.topMargin: centralView.height/14
-            property point clickPos: "0,0";
-            cursorShape: Qt.SizeHorCursor;
-            onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
-            onPositionChanged : {
-                var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-                if(centralView.width+delta.x>50){
-                    centralView.width+=delta.x;
-                }else{
-                    centralView.width=50;
-                }
-            }
-        }
-        //上边拉伸
-        MouseArea{
-            id:change_t;
-            height: centralView.height/14;
-            width: centralView.width*6/7;
-            anchors.left: centralView.left;
-            anchors.top: centralView.top;
-            anchors.leftMargin: centralView.height/14
-            property point clickPos: "0,0";
-            cursorShape: Qt.SizeVerCursor;
-            onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
-            onPositionChanged : {
-                var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-                var deltay= centralView.height-50;
-                if(centralView.height-delta.y>50){
-                    centralView.height-=delta.y;
-                    centralView.y+=delta.y;
-                }else{
-                    centralView.height=50;
-                    centralView.y+=deltay;
-                }
-            }
-        }
-        //下边拉伸
-        MouseArea{
-            id:change_b;
-            height: centralView.height/14;
-            width: centralView.width*6/7;
-            anchors.left: centralView.left;
-            anchors.bottom: centralView.bottom;
-            anchors.leftMargin: centralView.height/14
-            property point clickPos: "0,0";
-            cursorShape: Qt.SizeVerCursor;
-            onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
-            onPositionChanged : {
-                var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-                if(centralView.height+delta.y>50){
-                    centralView.height+=delta.y;
-                }else{
-                    centralView.height=50;
-                }
-            }
-        }
+
+
+
+
+    //产生行和列  末尾
+
+    function createImageviewer(){
+        var component = Qt.createComponent("Imageviewer.qml");
+        var object = component.createObject(operating_right_view);
+        object.pictureSource=signalsource_listview.pictureSource;
     }
+
+    function createImageviewer1(){
+        var component = Qt.createComponent("Imageviewer.qml");
+        var object = component.createObject(operating_right_view1);
+        object.pictureSource=signalsource_listview.pictureSource;
+    }
+
+    function change_resolution(){
+        operating_right_view.width=changeResolution.width_item;
+        operating_right_view.height=changeResolution.height_item;
+    }
+
 
 }

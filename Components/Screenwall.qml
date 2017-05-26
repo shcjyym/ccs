@@ -244,7 +244,10 @@ Item {
             id:wall_model;
             ListModel{
                 ListElement{
-                    name:"试例墙";
+                    name:"屏幕一";
+                }
+                ListElement{
+                    name:"屏幕二";
                 }
             }
         }

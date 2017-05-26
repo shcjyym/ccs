@@ -51,5 +51,9 @@
         <file>Components/Model/Segmentation.qml</file>
         <file>Components/Model/Rename.qml</file>
         <file>Components/Sgcomponent.qml</file>
+        <file>Components/Imageviewer.qml</file>
+        <file>Components/pictures/background3.jpg</file>
+        <file>Components/pictures/background4.jpg</file>
+        <file>Components/Model/Changeresolution.qml</file>
     </qresource>
 </RCC>
