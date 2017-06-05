@@ -29,7 +29,6 @@ Item {
 
 
 //右侧框图
-    Screenwall{id:refer;}
     property var oprightx: operating_right_view.x;
     property var oprighty: operating_right_view.y;
     ScrollView{
@@ -57,8 +56,8 @@ Item {
 
     ScrollView{
         id:operating_right1;
-        width: refer.wallrightw;
-        height: refer.wallrighth;
+        width: operating.width-300;
+        height: operating.height-180;
         anchors.top: operating_left.top;
         anchors.topMargin: 70;
         anchors.left: operating_left.right;
@@ -158,7 +157,7 @@ Item {
             width: 50;
             anchors.left: operating_control.left;
             anchors.verticalCenter: operating_control.verticalCenter;
-            model:["正常","10%","20%","30%","40%","50%","60%","70%","80%","90%"];
+            model:["正常"];
            /* onCurrentIndexChanged: {
                 if(currentIndex===0){centralView.height=500;centralView.width=500;}
                 if(currentIndex===1){centralView.height=50;centralView.width=50;}
@@ -174,7 +173,7 @@ Item {
         }
         TextNew{
             id:setting;
-            text: "设置";
+            text: "";
             font.bold: false;
             anchors.left: windowsize.right;
             anchors.leftMargin: 40;

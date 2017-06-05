@@ -11,7 +11,7 @@ ApplicationWindow{
     width: 250;
     height: 150;
     flags:Qt.Dialog;
-    title: "屏幕划分";
+    title: "修改分辨率";
 
     property string width_item: width_field.text;
     property string height_item: height_field.text;
