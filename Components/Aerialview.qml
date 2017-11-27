@@ -195,15 +195,15 @@ Item{
             opacity: 0.8;
         }
         TextNew{
-            id:viewer2_2;
-            text:"鸟瞰图信息";
-            color:"orange";
-            anchors.left: viewer2bg.left;
-            anchors.leftMargin: 5;
-            anchors.verticalCenter: viewer2_1.verticalCenter;
+            id:viewer2_2
+            text:"鸟瞰图信息"
+            color:"orange"
+            anchors.left: viewer2bg.left
+            anchors.leftMargin: 5
+            anchors.verticalCenter: viewer2_1.verticalCenter
         }
         TextNew{
-            id:viewer2_3;
+            id:viewer2_3
             text:"屏幕墙总数:";
             font.pixelSize: 12;
             anchors.left : viewer2bg.left;

@@ -55,5 +55,6 @@
         <file>Components/pictures/background3.jpg</file>
         <file>Components/pictures/background4.jpg</file>
         <file>Components/Model/Changeresolution.qml</file>
+        <file>Components/pictures/background5.jpg</file>
     </qresource>
 </RCC>

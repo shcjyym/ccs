@@ -190,6 +190,18 @@ Item {
                 onClicked: {
                     wrapper.ListView.view.currentIndex=index;//获取当前选中的index
                     mouse.accepted=true;
+                    if(index===0){
+                        imageViewer.source= ""
+                        centralView.visible=false;
+                    }
+                    if(index===1){
+                        centralView.visible=true;
+                        imageViewer.source= "./pictures/background1.jpg";
+                    }
+                    if(index===2){
+                        imageViewer.source= "";
+                        centralView.visible=false;
+                    }
                 }
             }
 
@@ -319,4 +331,226 @@ Item {
             wall_listview.renameOne();
         }
     }
+
+ //存储照片的中心框，包含拉伸，拖动，缩放
+     Item{
+         id:centralView;
+         x:screenwall_right.x;
+         y:screenwall_right.y;
+         height: 500;
+         width: 500;
+         visible: false;//一开始设置为false，之后在显示图片时加入true属性，避免一进入界面鼠标图标更换的情况
+         z:4;
+         Image {
+             id: imageViewer;
+             anchors.fill:parent;
+             asynchronous: true;
+             z:4;
+         }
+         Drag.active: dragArea.drag.active
+         MouseArea {
+             id: dragArea
+             cursorShape: pressed?Qt.ClosedHandCursor:Qt.OpenHandCursor;
+             height: centralView.height*6/7;
+             width: centralView.width*6/7;
+             anchors.centerIn : parent;
+             drag.target: parent
+         }
+ //**图片拉伸**
+         //右下角拉伸
+         MouseArea{
+             id:change_rb;
+             height: centralView.height/14;
+             width: centralView.width/14;
+             anchors.right: centralView.right;
+             anchors.bottom: centralView.bottom;
+             property point clickPos: "0,0";
+             cursorShape: Qt.SizeFDiagCursor;
+             onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
+             onPositionChanged : {
+                 var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
+                 if(centralView.width+delta.x>50){
+                 centralView.width+=delta.x;
+                 }else{
+                     centralView.width=50;
+                 }
+                 if(centralView.height+delta.y>50){
+                 centralView.height+=delta.y;
+                 }else{
+                     centralView.height=50;
+                 }
+             }
+         }
+         //右上角拉伸
+         MouseArea{
+             id:change_rt;
+             height: centralView.height/14;
+             width: centralView.width/14;
+             anchors.right: centralView.right;
+             anchors.top: centralView.top;
+             property point clickPos: "0,0";
+             cursorShape: Qt.SizeBDiagCursor;
+             onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
+             onPositionChanged : {
+                 var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
+                 var deltay= centralView.height-50;
+                 if(centralView.width+delta.x>50){
+                     centralView.width+=delta.x;
+                 }else{
+                     centralView.width=50;
+                 }
+                 if(centralView.height-delta.y>50){
+                     centralView.height-=delta.y;
+                     centralView.y+=delta.y;
+                 }else{
+                     centralView.height=50;
+                     centralView.y+=deltay;
+                 }
+             }
+         }
+         //左下角拉伸
+         MouseArea{
+             id:change_lb;
+             height: centralView.height/14;
+             width: centralView.width/14;
+             anchors.left: centralView.left;
+             anchors.bottom: centralView.bottom;
+             property point clickPos: "0,0";
+             cursorShape: Qt.SizeBDiagCursor;
+             onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
+             onPositionChanged : {
+                 var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
+                 var deltax= centralView.width-50;
+                 if(centralView.width-delta.x>50){
+                     centralView.width-=delta.x;
+                     centralView.x+=delta.x;
+                 }else{
+                     centralView.width=50;
+                     centralView.x+=deltax;
+                 }
+                 if(centralView.height+delta.y>50){
+                     centralView.height+=delta.y;
+                 }else{
+                     centralView.height=50;
+                 }
+             }
+         }
+         //左上角拉伸
+         MouseArea{
+             id:change_lt;
+             height: centralView.height/14;
+             width: centralView.width/14;
+             anchors.left: centralView.left;
+             anchors.top: centralView.top;
+             property point clickPos: "0,0";
+             cursorShape: Qt.SizeFDiagCursor;
+             onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
+             onPositionChanged : {
+                 var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
+                 var deltax= centralView.width-50;
+                 var deltay= centralView.height-50;
+                 if(centralView.width-delta.x>50){
+                     centralView.width-=delta.x;
+                     centralView.x+=delta.x;
+                 }else{
+                     centralView.width=50;
+                     centralView.x+=deltax;
+                 }
+                 if(centralView.height-delta.y>50){
+                 centralView.height-=delta.y;
+                 centralView.y+=delta.y;
+                 }else{
+                     centralView.height=50;
+                     centralView.y+=deltay;
+                 }
+             }
+         }
+         //左边拉伸
+         MouseArea{
+             id:change_l;
+             height: centralView.height*6/7;
+             width: centralView.width/14;
+             anchors.left: centralView.left;
+             anchors.top: centralView.top;
+             anchors.topMargin: centralView.height/14
+             property point clickPos: "0,0";
+             cursorShape: Qt.SizeHorCursor;
+             onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
+             onPositionChanged : {
+                 var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
+                 var deltax= centralView.width-50;
+                 if(centralView.width-delta.x>50){
+                     centralView.width-=delta.x;
+                     centralView.x+=delta.x;
+                 }else{
+                     centralView.width=50;
+                     centralView.x+=deltax;
+                 }
+             }
+         }
+         //右边拉伸
+         MouseArea{
+             id:change_r;
+             height: centralView.height*6/7;
+             width: centralView.width/14;
+             anchors.right: centralView.right;
+             anchors.top: centralView.top;
+             anchors.topMargin: centralView.height/14
+             property point clickPos: "0,0";
+             cursorShape: Qt.SizeHorCursor;
+             onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
+             onPositionChanged : {
+                 var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
+                 if(centralView.width+delta.x>50){
+                     centralView.width+=delta.x;
+                 }else{
+                     centralView.width=50;
+                 }
+             }
+         }
+         //上边拉伸
+         MouseArea{
+             id:change_t;
+             height: centralView.height/14;
+             width: centralView.width*6/7;
+             anchors.left: centralView.left;
+             anchors.top: centralView.top;
+             anchors.leftMargin: centralView.height/14
+             property point clickPos: "0,0";
+             cursorShape: Qt.SizeVerCursor;
+             onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
+             onPositionChanged : {
+                 var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
+                 var deltay= centralView.height-50;
+                 if(centralView.height-delta.y>50){
+                     centralView.height-=delta.y;
+                     centralView.y+=delta.y;
+                 }else{
+                     centralView.height=50;
+                     centralView.y+=deltay;
+                 }
+             }
+         }
+         //下边拉伸
+         MouseArea{
+             id:change_b;
+             height: centralView.height/14;
+             width: centralView.width*6/7;
+             anchors.left: centralView.left;
+             anchors.bottom: centralView.bottom;
+             anchors.leftMargin: centralView.height/14
+             property point clickPos: "0,0";
+             cursorShape: Qt.SizeVerCursor;
+             onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
+             onPositionChanged : {
+                 var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
+                 if(centralView.height+delta.y>50){
+                     centralView.height+=delta.y;
+                 }else{
+                     centralView.height=50;
+                 }
+             }
+         }
+     }
+
 }

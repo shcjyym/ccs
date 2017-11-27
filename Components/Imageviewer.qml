@@ -8,26 +8,36 @@ import "./Model"
 
 Item{
     id:centralView
-    x:bbb.oprightx;
-    y:bbb.oprighty;
-    z:4;
+    //x:bbb.oprightx;
+    //y:bbb.oprighty;
+    //z:4
+    //anchors.fill: parent
 
     visible: true;
     property string pictureSource;
-    Operating{id:bbb;}
+    property int id: -1
+    //Operating{id:bbb;}
 
+    property int order: 0
+    property string ip: ""
+    property string mac:""
+    property int configScale : 0
+
+    signal objectDelete(var object);
 
     Rectangle{
-        anchors.fill: parent;
+        anchors.fill: centralView;
         color: "grey";
     }
     Image {
         id: imageViewer;
+        parent: centralView
         x:parent.x;
         y:parent.y;
         asynchronous: true;
         source: pictureSource;
-        z:4;
+
+        anchors.fill:  centralView
     }
     //Drag.active: centraldragArea.drag.active
     MouseArea {
@@ -39,11 +49,13 @@ Item{
         anchors.rightMargin: imageViewer.width/14;
         anchors.bottom: imageViewer.bottom;
         anchors.bottomMargin: imageViewer.height/14
-        drag.target: imageViewer;
+        drag.target: centralView;
         acceptedButtons: Qt.LeftButton | Qt.RightButton;
         onClicked: {
             if(mouse.button===Qt.RightButton){
+                centralView.objectDelete(centralView);
                 centralView.destroy();
+
             }
         }
         onDoubleClicked: {
@@ -52,6 +64,7 @@ Item{
             centralView.height=operating_right.height;
             centralView.width=operating_right.width;
         }
+
     }
 //**图片拉伸**
     //右下角拉伸
@@ -66,15 +79,15 @@ Item{
         onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
         onPositionChanged : {
             var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-            if(imageViewer.width+delta.x>50){
-            imageViewer.width+=delta.x;
+            if(centralView.width+delta.x>50){
+            centralView.width+=delta.x;
             }else{
-                imageViewer.width=50;
+                centralView.width=50;
             }
-            if(imageViewer.height+delta.y>50){
-            imageViewer.height+=delta.y;
+            if(centralView.height+delta.y>50){
+            centralView.height+=delta.y;
             }else{
-                imageViewer.height=50;
+                centralView.height=50;
             }
         }
     }
@@ -91,17 +104,17 @@ Item{
         onPositionChanged : {
             var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
             var deltay= centralView.height-50;
-            if(imageViewer.width+delta.x>50){
-                imageViewer.width+=delta.x;
+            if(centralView.width+delta.x>50){
+                centralView.width+=delta.x;
             }else{
-                imageViewer.width=50;
+                centralView.width=50;
             }
-            if(imageViewer.height-delta.y>50){
-                imageViewer.height-=delta.y;
-                imageViewer.y+=delta.y;
+            if(centralView.height-delta.y>50){
+                centralView.height-=delta.y;
+                centralView.y+=delta.y;
             }else{
-                imageViewer.height=50;
-                imageViewer.y+=deltay;
+                centralView.height=50;
+                centralView.y+=deltay;
             }
         }
     }
@@ -118,17 +131,17 @@ Item{
         onPositionChanged : {
             var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
             var deltax= centralView.width-50;
-            if(imageViewer.width-delta.x>50){
-                imageViewer.width-=delta.x;
-                imageViewer.x+=delta.x;
+            if(centralView.width-delta.x>50){
+                centralView.width-=delta.x;
+                centralView.x+=delta.x;
             }else{
-                imageViewer.width=50;
-                imageViewer.x+=deltax;
+                centralView.width=50;
+                centralView.x+=deltax;
             }
-            if(imageViewer.height+delta.y>50){
-                imageViewer.height+=delta.y;
+            if(centralView.height+delta.y>50){
+                centralView.height+=delta.y;
             }else{
-                imageViewer.height=50;
+                centralView.height=50;
             }
         }
     }
@@ -144,21 +157,21 @@ Item{
         onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
         onPositionChanged : {
             var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-            var deltax= imageViewer.width-50;
-            var deltay= imageViewer.height-50;
-            if(imageViewer.width-delta.x>50){
-                imageViewer.width-=delta.x;
-                imageViewer.x+=delta.x;
+            var deltax= centralView.width-50;
+            var deltay= centralView.height-50;
+            if(centralView.width-delta.x>50){
+                centralView.width-=delta.x;
+                centralView.x+=delta.x;
             }else{
-                imageViewer.width=50;
-                imageViewer.x+=deltax;
+                centralView.width=50;
+                centralView.x+=deltax;
             }
-            if(imageViewer.height-delta.y>50){
-            imageViewer.height-=delta.y;
-            imageViewer.y+=delta.y;
+            if(centralView.height-delta.y>50){
+            centralView.height-=delta.y;
+            centralView.y+=delta.y;
             }else{
-                imageViewer.height=50;
-                imageViewer.y+=deltay;
+                centralView.height=50;
+                centralView.y+=deltay;
             }
         }
     }
@@ -175,13 +188,13 @@ Item{
         onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
         onPositionChanged : {
             var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-            var deltax= imageViewer.width-50;
-            if(imageViewer.width-delta.x>50){
-                imageViewer.width-=delta.x;
-                imageViewer.x+=delta.x;
+            var deltax= centralView.width-50;
+            if(centralView.width-delta.x>50){
+                centralView.width-=delta.x;
+                centralView.x+=delta.x;
             }else{
-                imageViewer.width=50;
-                imageViewer.x+=deltax;
+                centralView.width=50;
+                centralView.x+=deltax;
             }
         }
     }
@@ -198,10 +211,10 @@ Item{
         onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
         onPositionChanged : {
             var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-            if(imageViewer.width+delta.x>50){
-                imageViewer.width+=delta.x;
+            if(centralView.width+delta.x>50){
+                centralView.width+=delta.x;
             }else{
-                imageViewer.width=50;
+                centralView.width=50;
             }
         }
     }
@@ -218,13 +231,13 @@ Item{
         onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
         onPositionChanged : {
             var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-            var deltay= imageViewer.height-50;
-            if(imageViewer.height-delta.y>50){
-                imageViewer.height-=delta.y;
-                imageViewer.y+=delta.y;
+            var deltay= centralView.height-50;
+            if(centralView.height-delta.y>50){
+                centralView.height-=delta.y;
+                centralView.y+=delta.y;
             }else{
-                imageViewer.height=50;
-                imageViewer.y+=deltay;
+                centralView.height=50;
+                centralView.y+=deltay;
             }
         }
     }
@@ -241,10 +254,10 @@ Item{
         onPressed: {clickPos=Qt.point(mouse.x,mouse.y);}
         onPositionChanged : {
             var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y);
-            if(imageViewer.height+delta.y>50){
-                imageViewer.height+=delta.y;
+            if(centralView.height+delta.y>50){
+                centralView.height+=delta.y;
             }else{
-                imageViewer.height=50;
+                centralView.height=50;
             }
         }
     }

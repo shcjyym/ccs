@@ -3,7 +3,9 @@ TEMPLATE = app
 QT += qml quick widgets
 CONFIG += c++11
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    ccalcposgenconfigfile.cpp \
+    cinputfile.cpp
 
 RESOURCES += qml.qrc
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -25,8 +27,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # Default rules for deployment.
 include(deployment.pri)
 
-HEADERS +=
+HEADERS += \
+    ccalcposgenconfigfile.h \
+    cinputfile.h
 
-DISTFILES +=
+DISTFILES += QT_NO_DEBUG_OUTPUT
+
+TARGET = VporCyber-2.1.1
 
 

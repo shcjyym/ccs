@@ -179,12 +179,12 @@ Item {
             Rectangle{
                 id:listTitle
                 anchors.fill: parent;
-                color:"steelblue";
+                color:"steelblue"
                 opacity: 0.7;
             }
            TextNew{
-               text:"DVI-I";
-               color: "darkgrey";
+               text:"DVI-I"
+               color: "darkgrey"
                font.pixelSize: 25;
                anchors.centerIn: listTitle;
            }
@@ -195,16 +195,16 @@ Item {
         id:inModel;
         ListModel{
             ListElement{
-                name:"1.121.45.0";
+                name:"1.121.45.0"
             }
             ListElement{
-                name:"128.111.45.1";
+                name:"128.111.45.1"
             }
             ListElement{
-                name:"118.110.45.2";
+                name:"118.110.45.2"
             }
             ListElement{
-                name:"28.1.145.123";
+                name:"28.1.145.123"
             }
         }
     }

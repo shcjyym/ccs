@@ -11,15 +11,15 @@ import "./Components/Model"
 Resources.ClientWindow{
     id:mainWindow;
     visible: true;
-    //    FontLoader { id: aFont; source: "file:" }
+    //    FontLoader { id: aFont; source: "file:///D:/qtworkspace/font/Source.ttf" }  字体无法载入，一直处于加载状态
     Resources.Operating{id:operating;}
-    Resources.Aerialview{id:aerialview;}
-    Resources.Alarm{id:alarm;}
-    Resources.Audio{id:audio;}
-    Resources.Inputnode{id:inputnode;}
-    Resources.Outputnode{id:outputnode;}
+    //Resources.Aerialview{id:aerialview;}
+    //Resources.Alarm{id:alarm;}
+    //Resources.Audio{id:audio;}
+    //Resources.Inputnode{id:inputnode;}
+    //Resources.Outputnode{id:outputnode;}
     //Resources.IPC{id:ipc;}
-    Resources.Screenwall{id:screenwall;}
+    //Resources.Screenwall{id:screenwall;}
     Image {
         id: menuButton;
         source: "./Components/pictures/menu.png";
@@ -41,7 +41,7 @@ Resources.ClientWindow{
                 audio.visible=false;
                 inputnode.visible=false;
                 outputnode.visible=false;
-                //ipc.visible=false;
+                ipc.visible=false;
                 screenwall.visible=false;
                 logo.visible=true;
                 count=0;
@@ -51,7 +51,7 @@ Resources.ClientWindow{
                 audioWindow.source="./Components/pictures/Audio.png";
                 inputnodeWindow.source="./Components/pictures/Inputnode.png";
                 outputnodeWindow.source="./Components/pictures/Outputnode.png";
-                //ipcWindow.source="./Components/pictures/IPC.png";
+                ipcWindow.source="./Components/pictures/IPC.png";
                 screenwallWindow.source="./Components/pictures/Screenwall.png";
             }
             onEntered: {
@@ -88,12 +88,13 @@ Resources.ClientWindow{
             hoverEnabled: true;
             onClicked: {
                 operating.visible=true;
+                /*
                 aerialview.visible=false;
                 alarm.visible=false;
                 audio.visible=false;
                 inputnode.visible=false;
                 outputnode.visible=false;
-                //ipc.visible=false;
+                ipc.visible=false;
                 screenwall.visible=false;
                 logo.visible=false;
                 operatingWindow.source="./Components/pictures/OperatingHover.png";
@@ -102,8 +103,8 @@ Resources.ClientWindow{
                 audioWindow.source="./Components/pictures/Audio.png";
                 inputnodeWindow.source="./Components/pictures/Inputnode.png";
                 outputnodeWindow.source="./Components/pictures/Outputnode.png";
-                //ipcWindow.source="./Components/pictures/IPC.png";
-                screenwallWindow.source="./Components/pictures/Screenwall.png";
+                ipcWindow.source="./Components/pictures/IPC.png";
+                screenwallWindow.source="./Components/pictures/Screenwall.png";*/
                 count=1;
             }
             onEntered: {
@@ -115,6 +116,7 @@ Resources.ClientWindow{
             }
         }
     }
+    /*
     //Enter Aerialview
     Image {
         id: aerialviewWindow;
@@ -136,7 +138,7 @@ Resources.ClientWindow{
                 audio.visible=false;
                 inputnode.visible=false;
                 outputnode.visible=false;
-                //ipc.visible=false;
+                ipc.visible=false;
                 screenwall.visible=false;
                 logo.visible=false;
                 operatingWindow.source="./Components/pictures/Operating.png";
@@ -145,7 +147,7 @@ Resources.ClientWindow{
                 audioWindow.source="./Components/pictures/Audio.png";
                 inputnodeWindow.source="./Components/pictures/Inputnode.png";
                 outputnodeWindow.source="./Components/pictures/Outputnode.png";
-                //ipcWindow.source="./Components/pictures/IPC.png";
+                ipcWindow.source="./Components/pictures/IPC.png";
                 screenwallWindow.source="./Components/pictures/Screenwall.png";
                 count=2;
             }
@@ -179,7 +181,7 @@ Resources.ClientWindow{
                 audio.visible=false;
                 inputnode.visible=false;
                 outputnode.visible=false;
-                //ipc.visible=false;
+                ipc.visible=false;
                 screenwall.visible=false;
                 logo.visible=false;
                 operatingWindow.source="./Components/pictures/Operating.png";
@@ -188,7 +190,7 @@ Resources.ClientWindow{
                 audioWindow.source="./Components/pictures/Audio.png";
                 inputnodeWindow.source="./Components/pictures/Inputnode.png";
                 outputnodeWindow.source="./Components/pictures/Outputnode.png";
-                //ipcWindow.source="./Components/pictures/IPC.png";
+                ipcWindow.source="./Components/pictures/IPC.png";
                 screenwallWindow.source="./Components/pictures/Screenwall.png";
                 count=3;
             }
@@ -208,7 +210,7 @@ Resources.ClientWindow{
         visible: true;
         height: 50;
         width: 85;
-        anchors.left: outputnodeWindow.right;
+        anchors.left: ipcWindow.right;
         anchors.leftMargin: mainWindow.width/30;
         anchors.verticalCenter: menuButton.verticalCenter;
         z:3;
@@ -222,7 +224,7 @@ Resources.ClientWindow{
                 audio.visible=true;
                 inputnode.visible=false;
                 outputnode.visible=false;
-                //ipc.visible=false;
+                ipc.visible=false;
                 screenwall.visible=false;
                 logo.visible=false;
                 operatingWindow.source="./Components/pictures/Operating.png";
@@ -231,7 +233,7 @@ Resources.ClientWindow{
                 audioWindow.source="./Components/pictures/AudioHover.png";
                 inputnodeWindow.source="./Components/pictures/Inputnode.png";
                 outputnodeWindow.source="./Components/pictures/Outputnode.png";
-                //ipcWindow.source="./Components/pictures/IPC.png";
+                ipcWindow.source="./Components/pictures/IPC.png";
                 screenwallWindow.source="./Components/pictures/Screenwall.png";
                 count=4;
             }
@@ -265,7 +267,7 @@ Resources.ClientWindow{
                 audio.visible=false;
                 inputnode.visible=true;
                 outputnode.visible=false;
-                //ipc.visible=false;
+                ipc.visible=false;
                 screenwall.visible=false;
                 logo.visible=false;
                 operatingWindow.source="./Components/pictures/Operating.png";
@@ -274,7 +276,7 @@ Resources.ClientWindow{
                 audioWindow.source="./Components/pictures/Audio.png";
                 inputnodeWindow.source="./Components/pictures/InputnodeHover.png";
                 outputnodeWindow.source="./Components/pictures/Outputnode.png";
-                //ipcWindow.source="./Components/pictures/IPC.png";
+                ipcWindow.source="./Components/pictures/IPC.png";
                 screenwallWindow.source="./Components/pictures/Screenwall.png";
                 count=5;
             }
@@ -308,7 +310,7 @@ Resources.ClientWindow{
                 audio.visible=false;
                 inputnode.visible=false;
                 outputnode.visible=true;
-                //ipc.visible=false;
+                ipc.visible=false;
                 screenwall.visible=false;
                 logo.visible=false;
                 operatingWindow.source="./Components/pictures/Operating.png";
@@ -317,7 +319,7 @@ Resources.ClientWindow{
                 audioWindow.source="./Components/pictures/Audio.png";
                 inputnodeWindow.source="./Components/pictures/Inputnode.png";
                 outputnodeWindow.source="./Components/pictures/OutputnodeHover.png";
-                //ipcWindow.source="./Components/pictures/IPC.png";
+                ipcWindow.source="./Components/pictures/IPC.png";
                 screenwallWindow.source="./Components/pictures/Screenwall.png";
                 count=6;
             }
@@ -330,7 +332,6 @@ Resources.ClientWindow{
             }
         }
     }
-    /*
     //Enter IPC
     Image {
         id: ipcWindow;
@@ -374,7 +375,6 @@ Resources.ClientWindow{
             }
         }
     }
-    */
     //Enter Screenwall
     Image {
         id: screenwallWindow;
@@ -396,7 +396,7 @@ Resources.ClientWindow{
                 audio.visible=false;
                 inputnode.visible=false;
                 outputnode.visible=false;
-                //ipc.visible=false;
+                ipc.visible=false;
                 screenwall.visible=true;
                 logo.visible=false;
                 operatingWindow.source="./Components/pictures/Operating.png";
@@ -405,7 +405,7 @@ Resources.ClientWindow{
                 audioWindow.source="./Components/pictures/Audio.png";
                 inputnodeWindow.source="./Components/pictures/Inputnode.png";
                 outputnodeWindow.source="./Components/pictures/Outputnode.png";
-                //ipcWindow.source="./Components/pictures/IPC.png";
+                ipcWindow.source="./Components/pictures/IPC.png";
                 screenwallWindow.source="./Components/pictures/ScreenwallHover.png";
                 count=8;
             }
@@ -417,5 +417,5 @@ Resources.ClientWindow{
                 else{screenwallWindow.source="./Components/pictures/Screenwall.png";}
             }
         }
-    }
+    }*/
 }

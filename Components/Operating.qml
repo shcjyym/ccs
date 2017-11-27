@@ -6,15 +6,18 @@ import QtQuick.Layouts 1.2
 import QtQuick.Dialogs 1.2
 import "./Model"
 
+
 Item {
     id:operating;
     visible: false;
     anchors.fill: parent;
     z:4;
+    property int signalId: 1
 
     function addOne(){operating_listview.addOne();}
     function deleteOne(){operating_listview.deleteOne();}
 
+    property string macSel: ""
 
     Rectangle{
         id:operating_left;
@@ -29,8 +32,79 @@ Item {
 
 
 //右侧框图
+
+    Screenwall{id:refer;}
     property var oprightx: operating_right_view.x;
     property var oprighty: operating_right_view.y;
+
+
+
+    Button{
+        id:generateFile
+        anchors.right: operating_right.right
+        anchors.top: operating_left.top
+        text: qsTr("生成配置文件")
+
+        height: 35
+        width:100
+
+        onClicked: {
+            //调用C++计算接口
+            console.log("operating_right:"+operating_right_view.width+" "+operating_right_view.height);
+            CCalcPosGenConfigFile.clearAllExists();//先清理以前内存中数据
+            CCalcPosGenConfigFile.startGetOneScreenInfo(0);
+            CCalcPosGenConfigFile.getScreenWH(operating_right_view.width,
+                                              operating_right_view.height)
+            var data=operating_listview.model.get(0);
+            for(var i=0;i<operating_right.dynamicWindow.length;i++)
+            {
+                console.log("i:"+i+" "+operating_right.dynamicWindow[i].ip+" "+
+                            operating_right.dynamicWindow[i].configScale+" "+
+                            operating_right.dynamicWindow[i].x+" "+
+                            operating_right.dynamicWindow[i].y+" "+
+                            operating_right.dynamicWindow[i].width+" "+
+                            operating_right.dynamicWindow[i].height+" ");
+                CCalcPosGenConfigFile.getSignalConfigInfo(operating_right.dynamicWindow[i].x,
+                                                          operating_right.dynamicWindow[i].y,
+                                                          operating_right.dynamicWindow[i].width,
+                                                          operating_right.dynamicWindow[i].height,
+                                                          operating_right.dynamicWindow[i].ip,
+                                                          operating_right.dynamicWindow[i].configScale,
+                                                          operating_right.dynamicWindow[i].id,
+                                                          data.mac);
+
+            }
+
+            CCalcPosGenConfigFile.stopGetOneScreenInfo(0);
+            {
+                var data1=operating_listview.model.get(1);
+                CCalcPosGenConfigFile.startGetOneScreenInfo(1);
+                CCalcPosGenConfigFile.getScreenWH(operating_right_view1.width,
+                                                  operating_right_view1.height)
+                for(var i=0;i<operating_right1.dynamicWindow.length;i++)
+                {
+                    console.log("i:"+i+" "+operating_right1.dynamicWindow[i].ip+" "+
+                                operating_right1.dynamicWindow[i].configScale+" "+
+                                operating_right1.dynamicWindow[i].x+" "+
+                                operating_right1.dynamicWindow[i].y+" "+
+                                operating_right1.dynamicWindow[i].width+" "+
+                                operating_right1.dynamicWindow[i].height+" ");
+                    CCalcPosGenConfigFile.getSignalConfigInfo(operating_right1.dynamicWindow[i].x,
+                                                              operating_right1.dynamicWindow[i].y,
+                                                              operating_right1.dynamicWindow[i].width,
+                                                              operating_right1.dynamicWindow[i].height,
+                                                              operating_right1.dynamicWindow[i].ip,
+                                                              operating_right1.dynamicWindow[i].configScale,
+                                                              operating_right1.dynamicWindow[i].id,
+                                                              data1.mac);
+
+                }
+                CCalcPosGenConfigFile.stopGetOneScreenInfo(1);
+            }
+            CCalcPosGenConfigFile.calcAndGenConfigFile();
+        }
+    }
+
     ScrollView{
         id:operating_right;
         width: operating.width-300;
@@ -40,6 +114,8 @@ Item {
         anchors.left: operating_left.right;
         anchors.leftMargin: 20;
         visible: true;
+        property var dynamicWindow: new Array();
+
         Rectangle{
             id:operating_right_view
             height: 1080;
@@ -48,21 +124,40 @@ Item {
             DropArea{
                 anchors.fill: parent;
                 onDropped: {
-                    operating.createImageviewer();
+
+                    var ip= drop.getDataAsString("ip")
+                    var mac=drop.getDataAsString("mac")
+                    var configScale=parseInt(drop.getDataAsString("configScale"))
+                    var rwidth=parseInt(drop.getDataAsString("rwidth"))
+                    var rheight=parseInt(drop.getDataAsString("rheight"))
+                    var object=operating.createImageviewer(operating_right_view);
+                    object.ip=ip
+                    object.configScale=configScale
+                    object.width=rwidth
+                    object.height=rheight
+                    object.mac=mac
+                    object.objectDelete.connect(deleteSignalInScreen);
+                    //object.objectDelete(object);
+                    operating_right.dynamicWindow[operating_right.dynamicWindow.length]=object;
+
                 }
             }
         }
     }
 
+
+
     ScrollView{
         id:operating_right1;
-        width: operating.width-300;
-        height: operating.height-180;
+        width: refer.wallrightw;
+        height: refer.wallrighth;
         anchors.top: operating_left.top;
         anchors.topMargin: 70;
         anchors.left: operating_left.right;
         anchors.leftMargin: 20;
         visible: false;
+        property var dynamicWindow: new Array();
+
         Rectangle{
             id:operating_right_view1
             height: 1080;
@@ -71,7 +166,18 @@ Item {
             DropArea{
                 anchors.fill: parent;
                 onDropped: {
-                    operating.createImageviewer1();
+                    var ip= drop.getDataAsString("ip")
+                    var configScale=parseInt(drop.getDataAsString("configScale"))
+                    var rwidth=parseInt(drop.getDataAsString("rwidth"))
+                    var rheight=parseInt(drop.getDataAsString("rheight"))
+                    var object=operating.createImageviewer(operating_right_view1);
+                    object.ip=ip
+                    object.configScale=configScale
+                    object.width=rwidth
+                    object.height=rheight
+                    object.objectDelete.connect(deleteSignalInScreen);
+                    //object.objectDelete(object);
+                    operating_right1.dynamicWindow[operating_right1.dynamicWindow.length]=object;
                 }
             }
         }
@@ -157,23 +263,12 @@ Item {
             width: 50;
             anchors.left: operating_control.left;
             anchors.verticalCenter: operating_control.verticalCenter;
-            model:["正常"];
-           /* onCurrentIndexChanged: {
-                if(currentIndex===0){centralView.height=500;centralView.width=500;}
-                if(currentIndex===1){centralView.height=50;centralView.width=50;}
-                if(currentIndex===2){centralView.height=100;centralView.width=100;}
-                if(currentIndex===3){centralView.height=150;centralView.width=150;}
-                if(currentIndex===4){centralView.height=200;centralView.width=200;}
-                if(currentIndex===5){centralView.height=250;centralView.width=250;}
-                if(currentIndex===6){centralView.height=300;centralView.width=300;}
-                if(currentIndex===7){centralView.height=350;centralView.width=350;}
-                if(currentIndex===8){centralView.height=400;centralView.width=400;}
-                if(currentIndex===9){centralView.height=450;centralView.width=450;}
-            }*/
+            model:["正常","10%","20%","30%","40%","50%","60%","70%","80%","90%"];
+
         }
         TextNew{
             id:setting;
-            text: "";
+            text: "设置";
             font.bold: false;
             anchors.left: windowsize.right;
             anchors.leftMargin: 40;
@@ -181,7 +276,7 @@ Item {
         }
         TextNew{
             id:close;
-            text: "修改分辨率";
+            text: "修改MAC地址";
             font.bold: false;
             anchors.left: setting.right;
             anchors.leftMargin: 20;
@@ -214,12 +309,11 @@ Item {
             height: operating_control.height;
             width: 150;
             anchors.right: operating_control.right;
-            anchors.rightMargin: 20;
+            anchors.rightMargin: 20
             anchors.verticalCenter: operating_control.verticalCenter;
             model:["场景一","场景二","场景三"];
         }
     }
-
 
 
 
@@ -260,8 +354,8 @@ Item {
             if(operating_listview.currentIndex>=0){
                 var data=signalsource_listview.model.get(signalsource_listview.currentIndex);
                 pictureSource=data.imagesource;
-                resolutionw=data.resolution1;
-                resolutionw=data.resolution3;
+                resolutionw=data.rwidth;
+                resolutionw=data.rheight;
             }else{
                 pictureSource="";
             }
@@ -276,6 +370,8 @@ Item {
             height: 80;
             Drag.active: dragArea.drag.active;
             Drag.dragType: Drag.Automatic;
+            Drag.mimeData: {"ip":ip,"configScale":configScale,"rwidth":rwidth,"rheight":rheight,"mac":mac}
+
             property real change_x;
             property real change_y;
             MouseArea{
@@ -303,17 +399,17 @@ Item {
                 anchors.leftMargin: 15;
                 TextNew{
                     id: wrapper_name;
-                    text: name;
+                    //text: name;
                     font.bold: false;
                     anchors.left: parent.left;
                     Layout.preferredWidth: 25;
                 }
+                /*
                 TextNew{
                     id: wrapper_order;
-                    text: order;
                     font.bold: false;
                     Layout.preferredWidth: 15;
-                }
+                }*/
                 Rectangle {
                     id: wrapper_picture;
                     height: 60;
@@ -335,7 +431,7 @@ Item {
                 }
                 TextNew{
                     id:wrapper_resolution
-                    text:resolution1+resolution2+resolution3;
+                    text:rwidth+resolution2+rheight;
                     font.bold: false;
                     anchors.left: wrapper_ip.left;
                     anchors.verticalCenter: parent.verticalCenter;
@@ -349,32 +445,35 @@ Item {
             id:signalsource_model;
             ListModel{
                 ListElement{
-                    name:"ID1:";
-                    order:"(1)"
-                    imagesource:"./pictures/background1.jpg"
-                    ip:"11.111.11.111"
-                    resolution1:"1920"
+                    //name:"ID1:";
+                    imagesource:"./pictures/background5.jpg"
+                    ip:"208.0.1.1"
+                    configScale:0
+                    rwidth:1920
                     resolution2:"X"
-                    resolution3:"1080"
+                    rheight:1080
+                    mac:"FFFFFFFFFFFF"
                 }
                 ListElement{
-                    name:"ID1:";
-                    order:"(2)"
+                    //name:"ID1:";
                     imagesource:"./pictures/background3.jpg";
-                    ip:"22.222.22.222"
-                    resolution1:"1024"
+                    ip:"208.0.1.2"
+                    configScale:0
+                    rwidth:1920
                     resolution2:"X"
-                    resolution3:"768"
+                    rheight:1080
+                    mac:"EEEEEEEEEEEE"
                 }
+                /*
                 ListElement{
-                    name:"ID2:";
-                    order:"(1)"
+                    //name:"ID2:";
                     imagesource:"./pictures/background4.jpg";
-                    ip:"15.155.15.155"
-                    resolution1:"640"
+                    ip:"208.0.1.3"
+                    configScale:0
+                    rwidth:1920
                     resolution2:"X"
-                    resolution3:"360"
-                }
+                    rheight:1080
+                }*/
             }
     }
 //屏幕墙Listview
@@ -399,6 +498,7 @@ Item {
             if(operating_listview.currentIndex>=0){
                 var data=operating_listview.model.get(operating_listview.currentIndex);
                 window.text=data.name;
+                macSel = data.mac
             }else{
                 window.text=""
             }
@@ -441,7 +541,7 @@ Item {
                 anchors.leftMargin: 15;
                 TextNew{
                     id: roll;
-                    text: name;
+                    text: name+"  mac:"+mac;
                     font.bold: false;
                     Layout.preferredWidth: 120;
                 }
@@ -454,9 +554,11 @@ Item {
             ListModel{
                 ListElement{
                     name:"屏幕一";
+                    mac:"11-11-11-11-11-11"
                 }
                 ListElement{
                     name:"屏幕二";
+                    mac:"22-22-22-22-22-22"
                 }
             }
     }
@@ -486,26 +588,70 @@ Item {
             }
         }
 
-
-
-
     //产生行和列  末尾
-
-    function createImageviewer(){
-        var component = Qt.createComponent("Imageviewer.qml");
-        var object = component.createObject(operating_right_view);
-        object.pictureSource=signalsource_listview.pictureSource;
-    }
-
-    function createImageviewer1(){
-        var component = Qt.createComponent("Imageviewer.qml");
-        var object = component.createObject(operating_right_view1);
-        object.pictureSource=signalsource_listview.pictureSource;
+    function createImageviewer(myParent){
+        var mycomponent = Qt.createComponent("Imageviewer.qml");
+        var object;
+        if(mycomponent.status === Component.Ready){
+            console.log("createImageviewer:"+myParent)
+            object = mycomponent.createObject(myParent);
+            object.pictureSource=signalsource_listview.pictureSource;
+            object.id=signalId;
+            ++signalId;
+            return object;
+        }
     }
 
     function change_resolution(){
-        operating_right_view.width=changeResolution.width_item;
-        operating_right_view.height=changeResolution.height_item;
+        //operating_right_view.width=changeResolution.width_item;
+        //operating_right_view.height=changeResolution.height_item;
+        operating_listview.model.get(operating_listview.currentIndex).mac=changeResolution.strMac
+        console.log("change_resolution:"+operating_listview.model.get(operating_listview.currentIndex).mac+"   "+
+                    changeResolution.strMac+"  "+operating_listview.currentIndex)
+        operating_listview.update()
+    }
+
+    function deleteSignalInScreen(object){
+        //这里还需要通知后台的计算程序，告知signal的排序有变化
+        console.log("deleteSignalInScreen "+object)
+        for(var i=0;i<operating_right.dynamicWindow.length;i++)
+        {
+            console.log("deleteSignalInScreen"+i+" "+operating_right.dynamicWindow[i])
+            if(object===operating_right.dynamicWindow[i])
+            {
+                console.log("i:"+i+" "+operating_right.dynamicWindow[i].ip+" "+
+                            operating_right.dynamicWindow[i].configScale+" "+
+                            operating_right.dynamicWindow[i].x+" "+
+                            operating_right.dynamicWindow[i].y+" "+
+                            operating_right.dynamicWindow[i].width+" "+
+                            operating_right.dynamicWindow[i].height+" ");
+                for(var j=i;j<operating_right.dynamicWindow.length-1;++j)
+                {
+                    operating_right.dynamicWindow[j]=operating_right.dynamicWindow[j+1]
+                }
+                operating_right.dynamicWindow.pop();
+                return;
+            }
+        }
+        for(var i=0;i<operating_right1.dynamicWindow.length;i++)
+        {
+            console.log("deleteSignalInScreen"+i+" "+operating_right1.dynamicWindow[i])
+            if(object===operating_right1.dynamicWindow[i])
+            {
+                console.log("i:"+i+" "+operating_right1.dynamicWindow[i].ip+" "+
+                            operating_right1.dynamicWindow[i].configScale+" "+
+                            operating_right1.dynamicWindow[i].x+" "+
+                            operating_right1.dynamicWindow[i].y+" "+
+                            operating_right1.dynamicWindow[i].width+" "+
+                            operating_right1.dynamicWindow[i].height+" ");
+                for(var j=i;j<operating_right1.dynamicWindow.length-1;++j)
+                {
+                    operating_right1.dynamicWindow[j]=operating_right1.dynamicWindow[j+1]
+                }
+                operating_right1.dynamicWindow.pop();
+                return;
+            }
+        }
     }
 
 

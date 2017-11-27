@@ -42,7 +42,7 @@ Item{
         anchors.topMargin: 100;
         anchors.left: alarm.left;
         anchors.leftMargin: 10;
-        opacity: 0.5;
+        opacity: 0.5
     }
     Rectangle{
         id:alarm_left;
